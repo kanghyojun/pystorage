@@ -3,9 +3,11 @@
 
 """
 import time
+from multiprocessing import Process
 from optparse import OptionParser
 
 from storage.server import Server
+from storage.manage import Manager
 
 opt_parse = OptionParser()
 opt_parse.add_option("-s", "--start", action="store_true",
@@ -15,15 +17,11 @@ opt_parse.add_option("-s", "--start", action="store_true",
 def main():
     if option.start or option.start is None:
         sv = Server()
-        conn, addr = sv.get_accept()
-        print "Connected by {0}".format(addr)
+        sock = sv.get_sock()
         while True:
-            data = conn.recv(1024)
-            print "Server Recived {0}".format(data)
-            if data == 'exit':
-                break
-            conn.send("ok")
-        conn.close()
+            conn, addr = sock.accept()
+            manager = Manager(conn, addr)
+            manager.start()
     else:
         print "type with -s option to start server" 
 

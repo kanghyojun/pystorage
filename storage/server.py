@@ -22,12 +22,16 @@ class Server(object):
         self.port = port
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def get_accept(self):
+    def get_sock(self):
         """ return socket accept 
 
         :returns: socket accept
 
         """
-        self.s.bind((self.host, self.port))
+        try:
+            self.s.bind((self.host, self.port))
+        except socket.error:
+            print "storage.server error :: Address already used"
+            self.s.close()
         self.s.listen(2)
-        return self.s.accept()
+        return self.s
