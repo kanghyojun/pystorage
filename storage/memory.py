@@ -1,7 +1,10 @@
 class Store(object):
 
-    def __init__(self):
-        self.data = {} 
+    def __new__(cls):
+        if not "_the_instance" in cls.__dict__:
+            cls._the_instance = object.__new__(cls)
+            cls._the_instance.data = {}
+        return cls._the_instance
 
     def __setitem__(self, key, value):
         self.data[key] = value
