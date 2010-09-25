@@ -42,7 +42,7 @@ def evaluate(form, env, mem=None):
     elif type(form) is Symbol:
         key = str(form)
         try:
-                return env.get(key)
+            return env.get(key)
         except:
             raise Exception("Nonexistent Symbol :: {0}".format(key)) 
     elif type(form) is list:
