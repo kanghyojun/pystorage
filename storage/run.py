@@ -3,7 +3,6 @@
 
 """
 import time
-from multiprocessing import Process
 from optparse import OptionParser
 
 from storage.server import Server
