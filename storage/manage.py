@@ -2,9 +2,10 @@ import threading
 import storage.bendy.program
 import storage.memory
 
-store = storage.memory.Store()
-
 class Manager(threading.Thread):
+
+    lock = threading.Lock()
+    store = storage.memory.Store()
     
     def __init__(self, sock_conn, addr):
         threading.Thread.__init__(self)
@@ -25,7 +26,8 @@ class Manager(threading.Thread):
                     self.conn.send("some-help-massage")
                 else:
                     try:
-                        evaluated = storage.bendy.program.get_eval(cmd.strip(), store)
+                        print "received {0}".format(cmd)
+                        evaluated = self.evaluate_cmd(cmd)
                         if evaluated is not None:
                             self.conn.send(evaluated)
                         else:
@@ -36,3 +38,9 @@ class Manager(threading.Thread):
         except KeyboardInterrupt:
             print "exit server"
             self.conn.close()
+
+    def evaluate_cmd(self, cmd):
+        self.lock.acquire()
+        evaled = storage.bendy.program.get_eval(cmd.strip(), self.store)
+        self.lock.release()
+        return evaled

@@ -14,7 +14,7 @@ opt_parse.add_option("-s", "--start", action="store_true",
 (option, args) = opt_parse.parse_args()
 
 def main():
-    if option.start or option.start is None:
+    if option.start or option.start is not None:
         sv = Server()
         sock = sv.get_sock()
         while True:
