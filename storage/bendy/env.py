@@ -10,6 +10,8 @@ NUM_REG = "\d+"
 STR_REG  = "\"[^\"]*\""
 
 
+import pystoragefunc as func
+
 class Environment(object):
     """A Lisp Environment. contain primitive environment 
     
@@ -64,3 +66,21 @@ class Environment(object):
         else:
             return self.parent.get(key)
 
+def get_init_env():
+    """Set Initial environment item
+    
+    .. sourcecode:: pycon
+
+       >>> init_env = get_init_env()
+       >>> init_env.val
+       {'+': bendy.runtime.arithmetic.addition, ... }
+
+    :returns: a Environment which contains bendy primitive procedure 
+              e.g. :class:`bendy.env.Environment`
+
+    """
+    envs = Environment()
+    envs['set!'] = func.set_value 
+    envs['get'] = func.get_value 
+    envs['del'] = func.del_value 
+    return envs
